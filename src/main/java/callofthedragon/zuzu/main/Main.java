@@ -4,6 +4,7 @@ import javax.security.auth.login.LoginException;
 
 import callofthedragon.zuzu.commands.AddContact;
 import callofthedragon.zuzu.commands.Caller;
+import callofthedragon.zuzu.commands.ListContacts;
 import callofthedragon.zuzu.commands.resources.contactmanager.Contact;
 import callofthedragon.zuzu.commands.resources.contactmanager.ContactListManager;
 import callofthedragon.zuzu.config.ConfigParser;
@@ -22,6 +23,7 @@ public class Main {
         jda.setActivity(Activity.watching(ConfigParser.getPrefix() + "help"));
         jda.addEventListeners(new Caller());
         jda.addEventListeners(new AddContact());
+        jda.addEventListeners(new ListContacts());
         ContactListManager.instantiate();
 
         Twilio.init(ConfigParser.getAccountSID(), ConfigParser.getAuthToken());

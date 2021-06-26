@@ -5,8 +5,13 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 public class MessageSender {
-    public static void callPending(GuildMessageReceivedEvent event, String number){
-        event.getChannel().sendMessage("```fix\nCalling " + number +  "...\n```").queue();
+    public static void callPending(GuildMessageReceivedEvent event, String name, String phoneNumber){
+        String text;
+        if (name == "")
+            text = phoneNumber;
+        else
+            text = name;
+        event.getChannel().sendMessage("```fix\nCalling " + text +  "...\n```").queue();
     }
 
     public static void callSuccess(GuildMessageReceivedEvent event, String number){

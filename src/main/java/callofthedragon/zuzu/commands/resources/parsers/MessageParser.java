@@ -4,6 +4,8 @@ import callofthedragon.zuzu.commands.resources.gagawa.Play;
 import callofthedragon.zuzu.commands.resources.gagawa.Response;
 import callofthedragon.zuzu.commands.resources.gagawa.Say;
 import com.hp.gagawa.java.FertileNode;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,5 +50,13 @@ public class MessageParser {
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(text);
         return matcher.find();
+    }
+
+    public static boolean isUser(String text){
+        return MessageParser.regex("<@![0-9]*>", text);
+    }
+
+    public static User getUser(GuildMessageReceivedEvent event, String text){
+       return event.getChannel().getJDA().retrieveUserById(text.replaceAll("[<@!>]", "")).complete();
     }
 }
