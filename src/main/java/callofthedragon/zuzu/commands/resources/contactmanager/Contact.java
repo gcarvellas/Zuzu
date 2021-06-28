@@ -1,8 +1,9 @@
 package callofthedragon.zuzu.commands.resources.contactmanager;
-import callofthedragon.zuzu.commands.resources.parsers.MessageParser;
 import net.dv8tion.jda.api.entities.User;
 
-public class Contact {
+import java.io.Serializable;
+
+public class Contact implements Comparable, Serializable {
     private User user;
     private String number;
     private String name;
@@ -15,11 +16,6 @@ public class Contact {
 
     public Contact(User user, String phoneText){
         this(user, phoneText, user.getName());
-    }
-    public Contact(String name, String phoneText){
-        this(null, name, phoneText);
-        this.name = name;
-        this.number = phoneText;
     }
 
     public String getName(){
@@ -34,9 +30,7 @@ public class Contact {
         return user;
     }
 
-    public void setUser(User user){
-        this.user = user;
-    }
+    public void setName(String name){ this.name = name; }
 
     @Override
     public String toString(){
@@ -45,4 +39,20 @@ public class Contact {
         return user + "(" + name + ")" + " " + number;
     }
 
+    @Override
+    public boolean equals(Object obj){
+        Contact contact = (Contact) obj;
+        return this.user.equals(contact.getUser());
+    }
+
+    @Override
+    public int compareTo(Object obj){
+        Contact contact = (Contact) obj;
+        return this.user.toString().compareTo(contact.getUser().toString());
+    }
+
+    @Override
+    public int hashCode(){
+        return user.hashCode();
+    }
 }

@@ -10,9 +10,10 @@ public class ListContacts extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+        //work in progress. Want to add embed.
         String[] args = event.getMessage().getContentRaw().split(" ");
         if (args[0].equalsIgnoreCase(ConfigParser.getPrefix() + "listContacts")) {
-            for (Contact contact : ContactListManager.getContactList())
+            for (Contact contact : ContactListManager.getContactList().values())
                 event.getChannel().sendMessage(contact.toString()).queue();
         }
     }

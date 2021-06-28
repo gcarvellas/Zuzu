@@ -44,6 +44,26 @@ public class ConfigParser {
         return defaultProps.getProperty("hostPhoneNumber");
     }
 
+    public static String getAuthorId(){
+        checkPropertiesLoaded();
+        return defaultProps.getProperty("authorId");
+    }
+
+    public static String getMongoURI(){
+        checkPropertiesLoaded();
+        return defaultProps.getProperty("mongoURI");
+    }
+
+    public static String getDatabaseName(){
+        checkPropertiesLoaded();
+        return defaultProps.getProperty("database");
+    }
+
+    public static String getCollectionName(){
+        checkPropertiesLoaded();
+        return defaultProps.getProperty("collection");
+    }
+
     private static void checkPropertiesLoaded(){
         if (defaultProps == null)
             loadProperties();

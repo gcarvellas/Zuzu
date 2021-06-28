@@ -6,7 +6,6 @@ import callofthedragon.zuzu.commands.resources.contactmanager.ContactListManager
 import callofthedragon.zuzu.commands.resources.parsers.MessageParser;
 import callofthedragon.zuzu.config.ConfigParser;
 import com.twilio.exception.ApiException;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import com.twilio.type.PhoneNumber;
@@ -20,34 +19,39 @@ public class Caller extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event){
         String[] args = event.getMessage().getContentRaw().split(" ");
-        if(args[0].equalsIgnoreCase(ConfigParser.getPrefix() + "call")){
-            String message = MessageParser.convertToTwiml(Arrays.copyOfRange(args, 2, args.length));
-            try {
-                String phoneNumber = args[1];
-                String name = "";
-                if(MessageParser.isUser(args[1])){
-                    Contact contact = ContactListManager.getContactByID(args[1]);
-                    MessageSender.callPending(event, name = contact.getName(), phoneNumber = contact.getNumber());
-                } else if (args[1].contains("+[0-9]*")){
-                    MessageSender.callPending(event, name, args[1]);
-                } else {
+        try {
+            if (args[0].equalsIgnoreCase(ConfigParser.getPrefix() + "call") && args.length > 1) {
+                String message = MessageParser.convertToTwiml(Arrays.copyOfRange(args, 2, args.length));
+                if (MessageParser.isUser(args[1]) || args[1].matches("^[a-zA-Z0-9]+$")) { //&call CONTACT message... or //&call NAME message
                     Contact contact = ContactListManager.getContactByName(args[1]);
-                    MessageSender.callPending(event, name = contact.getName(), phoneNumber = contact.getNumber());
+                    MessageSender.callPending(event, contact.getName(), contact.getNumber());
+                    call(event, contact.getNumber(), contact.getName(), message);
+                } else if (args[1].matches("^[a-zA-Z0-9]+$")) {
+                    Contact contact = ContactListManager.getContactByName(args[1]);
+                    MessageSender.callPending(event, contact.getName(), contact.getNumber());
+                    call(event, contact.getNumber(), contact.getName(), message);
+                } else { //&call PHONE_NUMBER message...
+                    MessageSender.callPending(event, "", args[1]);
+                    call(event, args[1], "", message);
                 }
-                Call call = Call.creator(
-                        new PhoneNumber(phoneNumber),
-                        new PhoneNumber(ConfigParser.getPhoneNumber()),
-                        new Twiml(message))
-                        .create();
-                if (name == "")
-                    MessageSender.callSuccess(event, phoneNumber);
-                else
-                    MessageSender.callSuccess(event, name);
-            } catch (ApiException a){
-                MessageSender.errorMessage(event, a);
-            } catch (IllegalArgumentException e){
-                MessageSender.errorMessage(event, e);
             }
+        } catch (NullPointerException e){
+            MessageSender.errorMessage(event, e);
+        }
+    }
+    private void call(GuildMessageReceivedEvent event, String ID, String name, String message){
+        try {
+            Call call = Call.creator(
+                    new PhoneNumber(ID),
+                    new PhoneNumber(ConfigParser.getPhoneNumber()),
+                    new Twiml(message))
+                    .create();
+            if (name=="")
+                MessageSender.callSuccess(event, ID);
+            else
+                MessageSender.callSuccess(event, name);
+        } catch (ApiException e){
+            MessageSender.errorMessage(event, e);
         }
     }
 }

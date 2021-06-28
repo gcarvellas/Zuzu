@@ -2,18 +2,14 @@ package callofthedragon.zuzu.main;
 
 import javax.security.auth.login.LoginException;
 
-import callofthedragon.zuzu.commands.AddContact;
-import callofthedragon.zuzu.commands.Caller;
-import callofthedragon.zuzu.commands.ListContacts;
-import callofthedragon.zuzu.commands.resources.contactmanager.Contact;
+import callofthedragon.zuzu.commands.*;
 import callofthedragon.zuzu.commands.resources.contactmanager.ContactListManager;
 import callofthedragon.zuzu.config.ConfigParser;
+import callofthedragon.zuzu.events.database.Mongo;
 import com.twilio.Twilio;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-
-import java.util.HashSet;
 
 public class Main {
 
@@ -23,11 +19,17 @@ public class Main {
         jda.setActivity(Activity.watching(ConfigParser.getPrefix() + "help"));
         jda.addEventListeners(new Caller());
         jda.addEventListeners(new AddContact());
+        jda.addEventListeners(new SetName());
         jda.addEventListeners(new ListContacts());
+        jda.addEventListeners(new RemoveContact());
+        jda.addEventListeners(new Shutdown());
+        jda.addEventListeners(new Mongo());
+        jda.addEventListeners(new Messenger());
+        Mongo.start();
         ContactListManager.instantiate();
 
         Twilio.init(ConfigParser.getAccountSID(), ConfigParser.getAuthToken());
-
+        jda.setEnableShutdownHook(true);
         jda.build();
     }
 }
