@@ -41,7 +41,7 @@ public class Mongo extends ListenerAdapter {
             String userId = doc.get("UserID").toString();
             String name = doc.get("Name").toString();
             String number = doc.get("Number").toString();
-            ContactListManager.addContact(new Contact(e.getJDA().getUserById(userId), number, name));
+            ContactListManager.addContact(new Contact(e.getJDA().retrieveUserById(userId).complete(), number, name));
         }
         System.out.println("Successfully loaded data from mongo database");
     }
