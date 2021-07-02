@@ -25,6 +25,7 @@ public class Main {
         jda.addEventListeners(new Shutdown());
         jda.addEventListeners(new Mongo());
         jda.addEventListeners(new Messenger());
+        jda.addEventListeners(new Help());
         Mongo.start();
         ContactListManager.instantiate();
 
