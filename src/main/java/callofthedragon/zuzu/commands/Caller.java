@@ -4,6 +4,7 @@ import callofthedragon.zuzu.commands.resources.MessageSender;
 import callofthedragon.zuzu.commands.resources.contactmanager.Contact;
 import callofthedragon.zuzu.commands.resources.contactmanager.ContactListManager;
 import callofthedragon.zuzu.commands.resources.parsers.MessageParser;
+import callofthedragon.zuzu.commands.resources.web.YoutubeHandler;
 import callofthedragon.zuzu.config.ConfigParser;
 import com.twilio.exception.ApiException;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -22,6 +23,7 @@ public class Caller extends ListenerAdapter {
         try {
             if (args[0].equalsIgnoreCase(ConfigParser.getPrefix() + "call") && args.length > 1) {
                 String message = MessageParser.convertToTwiml(Arrays.copyOfRange(args, 2, args.length));
+                message = YoutubeHandler.addYoutubeURL(event, message);
                 if (MessageParser.isUser(args[1]) || args[1].matches("^[a-zA-Z0-9]+$")) { //&call CONTACT message... or //&call NAME message
                     Contact contact = ContactListManager.getContactByName(args[1]);
                     MessageSender.callPending(event, contact.getName(), contact.getNumber());

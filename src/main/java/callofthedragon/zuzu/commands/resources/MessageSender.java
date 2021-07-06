@@ -49,6 +49,10 @@ public class MessageSender {
     }
 
     public static void addContact(GuildMessageReceivedEvent event, String name, String number){
-            event.getChannel().sendMessage("```diff\n+ Added " + name + " with phone number " + number + "\n```").queue();
+        event.getChannel().sendMessage("```diff\n+ Added " + name + " with phone number " + number + "\n```").queue();
+    }
+
+    public static void detectedYoutubeURL(GuildMessageReceivedEvent event, String url){
+        event.getChannel().sendMessage("```fix\nYoutube URL Detected! " + "Downloading " + url +  "...\n```").queue();
     }
 }
