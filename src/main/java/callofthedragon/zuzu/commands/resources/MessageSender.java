@@ -42,6 +42,7 @@ public class MessageSender {
 
     public static void errorMessage(GuildMessageReceivedEvent event, Exception e){
         event.getChannel().sendMessage("```diff\n- Error! " + e.getMessage() + "\n```").queue();
+        e.printStackTrace();
     }
 
     public static void shutdown(GuildMessageReceivedEvent event){
@@ -53,6 +54,6 @@ public class MessageSender {
     }
 
     public static void detectedYoutubeURL(GuildMessageReceivedEvent event, String url){
-        event.getChannel().sendMessage("```fix\nYoutube URL Detected! " + "Downloading " + url +  "...\n```").queue();
+        event.getChannel().sendMessage("```fix\n[THIS FEATURE IS WIP. EXPECT THE BOT TO CRASH] Youtube URL Detected! " + "Uploading video internally to Google Drive...\n```").queue();
     }
 }

@@ -22,8 +22,7 @@ public class Caller extends ListenerAdapter {
         String[] args = event.getMessage().getContentRaw().split(" ");
         try {
             if (args[0].equalsIgnoreCase(ConfigParser.getPrefix() + "call") && args.length > 1) {
-                String message = MessageParser.convertToTwiml(Arrays.copyOfRange(args, 2, args.length));
-                message = YoutubeHandler.addYoutubeURL(event, message);
+                String message = MessageParser.convertToTwiml(event, Arrays.copyOfRange(args, 2, args.length));
                 if (MessageParser.isUser(args[1]) || args[1].matches("^[a-zA-Z0-9]+$")) { //&call CONTACT message... or //&call NAME message
                     Contact contact = ContactListManager.getContactByName(args[1]);
                     MessageSender.callPending(event, contact.getName(), contact.getNumber());
