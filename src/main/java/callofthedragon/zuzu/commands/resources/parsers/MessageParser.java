@@ -26,12 +26,14 @@ public class MessageParser {
                     String linkHost = link.getHost().replaceAll("//", "");
                     if (linkHost.equals("www.youtube.com")){
                         MessageSender.detectedYoutubeURL(event, link.toString());
-                        YoutubeHandler downloadedVideo = new YoutubeHandler(event, link);
+                        YoutubeHandler youtubeHandler = new YoutubeHandler(arg);
+                        arg = youtubeHandler.convertToMP3DirectDownload();
+                        MessageSender.successfulYoutubeURL(event);
                     }
                     childReference = new Play().appendText(arg);
                     head.appendChild(childReference);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
+                } catch (Exception e){
+                    MessageSender.errorMessage(event, e);
                 }
             }
             else {

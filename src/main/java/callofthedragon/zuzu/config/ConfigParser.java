@@ -68,4 +68,14 @@ public class ConfigParser {
         if (defaultProps == null)
             loadProperties();
     }
+
+    public static String getOperaDirectory(){
+        checkPropertiesLoaded();
+        return defaultProps.getProperty("operaDirectory");
+    }
+
+    public static String getOperaBinary(){
+        checkPropertiesLoaded();
+        return defaultProps.getProperty("operaBinary");
+    }
 }

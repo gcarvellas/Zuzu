@@ -4,6 +4,7 @@ import javax.security.auth.login.LoginException;
 
 import callofthedragon.zuzu.commands.*;
 import callofthedragon.zuzu.commands.resources.contactmanager.ContactListManager;
+import callofthedragon.zuzu.commands.resources.web.YoutubeHandler;
 import callofthedragon.zuzu.config.ConfigParser;
 import callofthedragon.zuzu.events.database.Mongo;
 import com.twilio.Twilio;
@@ -28,6 +29,9 @@ public class Main {
         jda.addEventListeners(new Help());
         Mongo.start();
         ContactListManager.instantiate();
+
+        System.setProperty("webdriver.opera.driver", ConfigParser.getOperaDirectory());
+        YoutubeHandler.setOptions();
 
         Twilio.init(ConfigParser.getAccountSID(), ConfigParser.getAuthToken());
         jda.setEnableShutdownHook(true);

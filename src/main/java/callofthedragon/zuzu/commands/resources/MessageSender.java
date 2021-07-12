@@ -54,6 +54,10 @@ public class MessageSender {
     }
 
     public static void detectedYoutubeURL(GuildMessageReceivedEvent event, String url){
-        event.getChannel().sendMessage("```fix\n[THIS FEATURE IS WIP. EXPECT THE BOT TO CRASH] Youtube URL Detected! " + "Uploading video internally to Google Drive...\n```").queue();
+        event.getChannel().sendMessage("```fix\n Youtube URL Detected! " + "Fetching from https://www.y2mate.com/youtube-mp3/...\n```").queue();
+    }
+
+    public static void successfulYoutubeURL(GuildMessageReceivedEvent event){
+        event.getChannel().sendMessage("```diff\n+ Successfully fetched youtube video!\n```").queue();
     }
 }

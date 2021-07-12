@@ -1,55 +1,49 @@
 package callofthedragon.zuzu.commands.resources.web;
-
-import callofthedragon.zuzu.commands.resources.MessageSender;
-import com.github.axet.vget.VGet;
-import com.hp.gagawa.java.elements.P;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+;
+import callofthedragon.zuzu.config.ConfigParser;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.opera.OperaOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class YoutubeHandler {
 
-    public YoutubeHandler(GuildMessageReceivedEvent event, URL link){
-        try {
-            //downloadVideo(event, new URL(link + "?vq=small"));
-            downloadVideo(event, new URL("https://www.youtube.com/watch?v=dWgRm-_DQD0?vq=small"));
-        } catch (MalformedURLException e){
-            MessageSender.errorMessage(event, e);
-        }
+    //Xpaths
+    private static final String INIT_DOWNLOAD_BTN_XPATH = "//button[@id='process_mp3' and @class='btn btn-success btn-mp3']";
+    private static final String FINAL_DOWNLOAD_BTN_XPATH = "//a[@class='btn btn-success btn-file' and @type='button']";
+
+    //Variables
+    private static final String YTD_URL = "https://www.y2mate.com/youtube-mp3/";
+    private static OperaOptions options;
+
+    private WebDriver driver;
+    private WebDriverWait wait;
+    private WebElement finalDownloadButton;
+
+    public YoutubeHandler(String unformattedURL){
+            driver = new OperaDriver(options);
+            driver.get(setURL(unformattedURL));
+            wait = new WebDriverWait(driver, 10);
     }
 
-    private void downloadVideo(GuildMessageReceivedEvent event, URL link){
-        try {
-            VGet vg = new VGet(link, File.createTempFile(String.valueOf(link.toString().hashCode()), "mp4"));
-            vg.download();
-        } catch (Exception e) {
-            MessageSender.errorMessage(event, new RuntimeException(e));
-        }
+    private String setURL(String unformattedURL){
+        return YTD_URL + unformattedURL.substring(unformattedURL.indexOf("v=") + 2);
     }
 
-    public static String addYoutubeURL(GuildMessageReceivedEvent event, String message){
-        String[] messageAsList = message.split(" ");
-        for (int i=0; i< messageAsList.length; i++){
-            if (isValidURL(messageAsList[i])){
-                MessageSender.detectedYoutubeURL(event, messageAsList[i]);
-                //MP3Handler handler = new MP3Handler(event);
-                //handler.stringToMP3String(messageAsList[i]);
-                //add google drive handler, upload file to google drive and send twilio link to there.
-            }
-        }
-        return messageAsList.toString();
+    public static void setOptions(){
+        options = new OperaOptions();
+        options.setBinary(ConfigParser.getOperaBinary());
     }
 
-    public static boolean isValidURL(String urlString){
-        try{
-            URI uri = new URI(urlString);
-            return true;
-        } catch (URISyntaxException e){
-            return false;
-        }
+
+    public String convertToMP3DirectDownload(){
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath(INIT_DOWNLOAD_BTN_XPATH))).click();
+            WebDriverWait wait = new WebDriverWait(driver, 5);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(FINAL_DOWNLOAD_BTN_XPATH)));
+            finalDownloadButton = driver.findElement(By.xpath(FINAL_DOWNLOAD_BTN_XPATH));
+            return finalDownloadButton.getAttribute("href").toString();
     }
 }
