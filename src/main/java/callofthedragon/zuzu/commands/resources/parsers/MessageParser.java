@@ -22,6 +22,8 @@ public class MessageParser {
         for (String arg: args){
             if (isURL(arg)){
                 try {
+                    if (arg.contains("youtu.be"))
+                        arg = arg.replace("youtu.be/", "www.youtube.com/watch?v=");
                     URL link = new URL(arg);
                     String linkHost = link.getHost().replaceAll("//", "");
                     if (linkHost.equals("www.youtube.com")){
@@ -29,6 +31,7 @@ public class MessageParser {
                         YoutubeHandler youtubeHandler = new YoutubeHandler(arg);
                         arg = youtubeHandler.convertToMP3DirectDownload();
                         MessageSender.successfulYoutubeURL(event);
+                        youtubeHandler.shutdown();
                     }
                     childReference = new Play().appendText(arg);
                     head.appendChild(childReference);

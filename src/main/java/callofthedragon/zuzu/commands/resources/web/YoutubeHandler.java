@@ -46,4 +46,8 @@ public class YoutubeHandler {
             finalDownloadButton = driver.findElement(By.xpath(FINAL_DOWNLOAD_BTN_XPATH));
             return finalDownloadButton.getAttribute("href").toString();
     }
+
+    public void shutdown(){
+        driver.close();
+    }
 }
