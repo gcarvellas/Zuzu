@@ -78,4 +78,13 @@ public class ConfigParser {
         checkPropertiesLoaded();
         return defaultProps.getProperty("operaBinary");
     }
+
+    public static boolean isStealthMode(){
+        checkPropertiesLoaded();
+        return Boolean.parseBoolean(defaultProps.getProperty("stealthCalls"));
+    }
+
+    public static void setStealthMode(boolean value){
+        defaultProps.setProperty("stealthCalls", Boolean.toString(value));
+    }
 }

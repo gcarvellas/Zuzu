@@ -5,6 +5,7 @@ import callofthedragon.zuzu.commands.resources.gagawa.Play;
 import callofthedragon.zuzu.commands.resources.gagawa.Response;
 import callofthedragon.zuzu.commands.resources.gagawa.Say;
 import callofthedragon.zuzu.commands.resources.web.YoutubeHandler;
+import callofthedragon.zuzu.config.ConfigParser;
 import com.hp.gagawa.java.FertileNode;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -27,10 +28,12 @@ public class MessageParser {
                     URL link = new URL(arg);
                     String linkHost = link.getHost().replaceAll("//", "");
                     if (linkHost.equals("www.youtube.com")){
-                        MessageSender.detectedYoutubeURL(event, link.toString());
+                        if (!ConfigParser.isStealthMode())
+                            MessageSender.detectedYoutubeURL(event, link.toString());
                         YoutubeHandler youtubeHandler = new YoutubeHandler(arg);
                         arg = youtubeHandler.convertToMP3DirectDownload();
-                        MessageSender.successfulYoutubeURL(event);
+                        if (!ConfigParser.isStealthMode())
+                            MessageSender.successfulYoutubeURL(event);
                         youtubeHandler.shutdown();
                     }
                     childReference = new Play().appendText(arg);

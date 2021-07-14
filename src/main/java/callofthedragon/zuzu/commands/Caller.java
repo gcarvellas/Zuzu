@@ -25,14 +25,17 @@ public class Caller extends ListenerAdapter {
                 String message = MessageParser.convertToTwiml(event, Arrays.copyOfRange(args, 2, args.length));
                 if (MessageParser.isUser(args[1]) || args[1].matches("^[a-zA-Z0-9]+$")) { //&call CONTACT message... or //&call NAME message
                     Contact contact = ContactListManager.getContactByName(args[1]);
-                    MessageSender.callPending(event, contact.getName(), contact.getNumber());
+                    if (!ConfigParser.isStealthMode())
+                        MessageSender.callPending(event, contact.getName(), contact.getNumber());
                     call(event, contact.getNumber(), contact.getName(), message);
                 } else if (args[1].matches("^[a-zA-Z0-9]+$")) {
                     Contact contact = ContactListManager.getContactByName(args[1]);
-                    MessageSender.callPending(event, contact.getName(), contact.getNumber());
+                    if (!ConfigParser.isStealthMode())
+                        MessageSender.callPending(event, contact.getName(), contact.getNumber());
                     call(event, contact.getNumber(), contact.getName(), message);
                 } else { //&call PHONE_NUMBER message...
-                    MessageSender.callPending(event, "", args[1]);
+                    if (!ConfigParser.isStealthMode())
+                        MessageSender.callPending(event, "", args[1]);
                     call(event, args[1], "", message);
                 }
             }
@@ -47,10 +50,18 @@ public class Caller extends ListenerAdapter {
                     new PhoneNumber(ConfigParser.getPhoneNumber()),
                     new Twiml(message))
                     .create();
-            if (name=="")
-                MessageSender.callSuccess(event, ID);
-            else
-                MessageSender.callSuccess(event, name);
+            if (!ConfigParser.isStealthMode()){
+                if (name=="")
+                    MessageSender.callSuccess(event, ID);
+                else
+                    MessageSender.callSuccess(event, name);
+            } else{
+                try {
+                    event.getMessage().delete().queue();
+                } catch (Exception e){
+                    MessageSender.errorMessage(event, e);
+                }
+            }
         } catch (ApiException e){
             MessageSender.errorMessage(event, e);
         }

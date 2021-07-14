@@ -27,6 +27,7 @@ public class Main {
         jda.addEventListeners(new Mongo());
         jda.addEventListeners(new Messenger());
         jda.addEventListeners(new Help());
+        jda.addEventListeners(new StealthMode());
         Mongo.start();
         ContactListManager.instantiate();
 

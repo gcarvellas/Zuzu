@@ -1,5 +1,6 @@
 package callofthedragon.zuzu.commands.resources;
 
+import callofthedragon.zuzu.config.ConfigParser;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ShutdownEvent;
@@ -59,5 +60,13 @@ public class MessageSender {
 
     public static void successfulYoutubeURL(GuildMessageReceivedEvent event){
         event.getChannel().sendMessage("```diff\n+ Successfully fetched youtube video!\n```").queue();
+    }
+
+    public static void stealthModeStatus(GuildMessageReceivedEvent event){
+        event.getChannel().sendMessage("```fix\n Stealth mode: " + ConfigParser.isStealthMode() + "\n```").queue();
+    }
+
+    public static void changeStealthStatus(GuildMessageReceivedEvent event, boolean result){
+        event.getChannel().sendMessage("```diff\n+ Successfully changed stealth mode to " + Boolean.toString(result) + "!\n```").queue();
     }
 }
