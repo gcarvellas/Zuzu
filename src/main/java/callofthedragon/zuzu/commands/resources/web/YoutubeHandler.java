@@ -40,11 +40,12 @@ public class YoutubeHandler {
 
 
     public String convertToMP3DirectDownload(){
-            wait.until(ExpectedConditions.elementToBeClickable(By.xpath(INIT_DOWNLOAD_BTN_XPATH))).click();
-            WebDriverWait wait = new WebDriverWait(driver, 5);
-            wait.until(ExpectedConditions.elementToBeClickable(By.xpath(FINAL_DOWNLOAD_BTN_XPATH)));
-            finalDownloadButton = driver.findElement(By.xpath(FINAL_DOWNLOAD_BTN_XPATH));
-            return finalDownloadButton.getAttribute("href").toString();
+        throw new IllegalArgumentException("FEATURE NO LONGER WORKS! NEEDS TO BE FIXED BY GEORGE"); //TODO
+            //wait.until(ExpectedConditions.elementToBeClickable(By.xpath(INIT_DOWNLOAD_BTN_XPATH))).click();
+            //WebDriverWait wait = new WebDriverWait(driver, 5);
+            //wait.until(ExpectedConditions.elementToBeClickable(By.xpath(FINAL_DOWNLOAD_BTN_XPATH)));
+            //finalDownloadButton = driver.findElement(By.xpath(FINAL_DOWNLOAD_BTN_XPATH));
+            //return finalDownloadButton.getAttribute("href").toString();
     }
 
     public void shutdown(){
